@@ -1,13 +1,14 @@
-let elementos = [];
+let elementos = []; // lista general de elementos
 
-async function conexionLista(tipo) {
+// Conexión para obtener la lista según tipo
+async function conexionLista(filtrotipo) {
   let url = "";
 
-  if (tipo === "characters") {
+  if (filtrotipo == "All" || filtrotipo == "characters") {
     url = "https://api.potterdb.com/v1/characters";
-  } else if (tipo === "spells") {
+  } else if (filtrotipo == "spells") {
     url = "https://api.potterdb.com/v1/spells";
-  } else if (tipo === "books") {
+  } else if (filtrotipo == "books") {
     url = "https://api.potterdb.com/v1/books";
   }
 
@@ -16,9 +17,16 @@ async function conexionLista(tipo) {
   return data.data;
 }
 
+// Cargar al iniciar
 async function General() {
   if (elementos.length === 0) {
     elementos = await conexionLista("characters");
   }
   Home();
+}
+
+// Filtrar manual (como tu FiltroConexion)
+async function FiltroConexion(filtroelegido) {
+  elementos = await conexionLista(filtroelegido);
+  document.getElementById("la-lista").innerHTML = generarLista(elementos);
 }

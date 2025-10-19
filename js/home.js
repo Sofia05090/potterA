@@ -1,107 +1,89 @@
-function generarLista(array) {
+// --- Función de búsqueda flexible ---
+function buscadorfuncion(texto) {
+  const sza = texto.trim().toLowerCase();
+  const contenedor = document.getElementById("la-lista");
+
+  if (!sza || sza.length < 3) {
+    contenedor.innerHTML = generarLista(elementos);
+    return;
+  }
+
+  // Filtrar elementos según coincidencia parcial en nombre o título
+  const filtrados = elementos.filter(el => {
+    const nombre = (el.attributes?.name || el.attributes?.title || el.name || "").toLowerCase();
+    return nombre.includes(sza);
+  });
+
+  contenedor.innerHTML = generarLista(filtrados);
+}
+
+// --- Función universal para generar la lista de elementos ---
+function generarLista(arrayelementos) {
+  if (!arrayelementos || arrayelementos.length === 0) {
+    return `<p style="text-align:center;">No hay elementos para mostrar.</p>`;
+  }
+
   let listaHTML = "";
-  for (let i = 0; i < array.length; i++) {
-    const el = array[i];
-    const id = el.id;
-    const name = el.attributes.name || "Sin nombre";
+
+  for (let i = 0; i < arrayelementos.length; i++) {
+    const el = arrayelementos[i];
+
+    // Soporte para datos desde API o desde localStorage
+    const id = el.id || `sin-id-${i}`;
+    const tipo = el.type || el.tipo || "characters";
+
+    // Campos que pueden variar según la fuente
+    const nombre = el.attributes?.name || el.attributes?.title || el.name || "Sin nombre";
+    const imagen = el.attributes?.image || el.image || "https://upload.wikimedia.org/wikipedia/en/6/6f/Hogwartscrest.png";
 
     listaHTML += `
-      <div class="c-lista-item" onclick="Detalle('${id}')">
-        <p>${name}</p>
+      <div class="c-lista-objeto obj-${id}" onclick="Detalle('${id}', '${tipo}')">
+        <img src="${imagen}" width="auto" height="60" loading="lazy" alt="${nombre}">
+        <p>${nombre}</p>
       </div>`;
   }
+
   return listaHTML;
 }
 
+// --- Vista principal (Home) ---
 function Home() {
   const root = document.getElementById("root");
+  root.innerHTML = "";
 
+  // --- Campo de búsqueda ---
   const buscador = document.createElement("input");
   buscador.classList.add("c-buscador");
-  buscador.placeholder = "Buscar personaje...";
-  buscador.addEventListener("input", () => {
-    buscadorfuncion(buscador.value);
+  buscador.type = "text";
+  buscador.placeholder = "Buscar personajes, hechizos o libros...";
+  buscador.addEventListener("input", () => buscadorfuncion(buscador.value));
+
+  // --- Botones de filtro (pestañas) ---
+  const tipos = [
+    { tipo: "characters", texto: "Personajes" },
+    { tipo: "spells", texto: "Hechizos" },
+    { tipo: "books", texto: "Libros" }
+  ];
+
+  const contenedorFiltro = document.createElement("div");
+  contenedorFiltro.classList.add("tipos-container");
+
+  tipos.forEach(({ tipo, texto }) => {
+    const btn = document.createElement("button");
+    btn.textContent = texto;
+    btn.addEventListener("click", () => FiltroConexion(tipo));
+    contenedorFiltro.appendChild(btn);
   });
 
-  const listaHTML = generarLista(elementos);
-  const contenedor = document.createElement("div");
-  contenedor.id = "la-lista";
-  contenedor.innerHTML = listaHTML;
+  // --- Contenedor de lista ---
+  const contenedorLista = document.createElement("div");
+  contenedorLista.classList.add("c-contenedor-lista");
+  contenedorLista.id = "la-lista";
+  contenedorLista.innerHTML = generarLista(elementos);
 
-  root.innerHTML = "";
+  // --- Ensamblar estructura ---
   root.appendChild(buscador);
-  root.appendChild(contenedor);
+  root.appendChild(contenedorFiltro);
+  root.appendChild(contenedorLista);
 }
 
-function buscadorfuncion(valor) {
-  const filtrados = elementos.filter(e =>
-    e.attributes.name.toLowerCase().includes(valor.toLowerCase())
-  );
-  document.getElementById("la-lista").innerHTML = generarLista(filtrados);
-}
-
-
-function generarLista(arraypokemones) {
-    let listaHTML = "";
-    for (let i = 0; i < arraypokemones.length; i++) {
-        let id = arraypokemones[i].url.split("/")[6];
-        listaHTML += `
-        <div class="c-lista-pokemon poke-${id}" onclick="Detalle('${id}')">
-            <p>#${id}</p>
-            <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${id}.png" width="auto" height="60" loading="lazy" alt="${arraypokemones[i].name}">
-            <p>${arraypokemones[i].name}</p>
-        </div>`;
-    }
-
-    return listaHTML;
-}
-
-function Home(filtro){
-
-    var root = document.getElementById("root");
-    root.innerHTML = ""
-    //buscador
-    const buscador = document.createElement("input");
-    buscador.classList.add("c-buscador");
-    buscador.type = "text";
-    buscador.placeholder = "Buscar Pokémon...";
-    buscador.addEventListener("input", () => {
-            buscadorfuncion(buscador.value);
-    });
-
-    //contenedor filtro
-    const tipos = [
-        "normal", "fighting", "flying", "poison", "ground", "rock", "bug",
-        "ghost", "steel", "fire", "water", "grass", "electric", "psychic", "ice",
-        "dragon", "dark", "fairy", "stellar", "unknown"
-    ];
-
-    const contenedorFiltro = document.createElement("div");
-    contenedorFiltro.classList.add("tipos-container"); 
-
-    for (let i = 0; i < tipos.length; i++) {
-        const btn = document.createElement("button");
-        btn.textContent = tipos[i];
-        
-        // Agregar el evento click para filtrar por tipo
-        btn.addEventListener("click", () => {
-            FiltroConexion(tipos[i]); 
-        });
-
-        // Agregar el botón al contenedor
-        contenedorFiltro.appendChild(btn);
-    }
-
-
-    //add contenedor lista
-    const listaHTML = generarLista(pokemones);
-    var contenedorLista = document.createElement("div");
-    contenedorLista.classList.add("c-contenedor-lista"); 
-    contenedorLista.id = "la-lista"; 
-    contenedorLista.innerHTML = listaHTML;
-
-    //agregar contenedores
-    root.appendChild(buscador);
-    root.appendChild(contenedorFiltro);
-    root.appendChild(contenedorLista);
-}

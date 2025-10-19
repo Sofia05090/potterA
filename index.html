@@ -1,0 +1,36 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Harry Potter</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <nav>
+        <button onclick="General()">Home</button>
+        <button onclick="Personajes()">Personajes</button>
+        <button onclick="Hechizos()">Hechizos</button>
+        <button onclick="Libros()">Libros</button>
+        <button onclick="Favoritos()">Favoritos</button>
+    </nav>
+
+    <div id="root">
+        <!-- lo que hacemos en js -->
+    </div>
+    <script src="js/conexion.js"></script>
+    <script src="js/detalle.js"></script>
+    <script src="js/favoritos.js"></script>
+    <script src="js/hechizos.js"></script>
+    <script src="js/home.js"></script>
+    <script src="js/libros.js"></script>
+    <script src="js/menu.js"></script>
+    <script src="js/personajes.js"></script>
+
+    <script>
+
+        document.addEventListener("DOMContentLoaded",General)
+
+    </script>
+    
+</body>
+</html>

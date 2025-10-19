@@ -1,6 +1,6 @@
 async function Detalle(id) {
   const root = document.getElementById("root");
-  const res = await fetch(`https://api.potterdb.com/v1/characters/${id}`);
+  const res = await fetch(`https://api.potterdb.com`);
   const data = await res.json();
   const char = data.data.attributes;
 

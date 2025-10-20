@@ -1,25 +1,7 @@
-// --- Función de búsqueda flexible ---
-function buscadorfuncion(texto) {
-  const sza = texto.trim().toLowerCase();
-  const contenedor = document.getElementById("la-lista");
-
-  if (!sza || sza.length < 3) {
-    contenedor.innerHTML = generarLista(elementos);
-    return;
-  }
-
-  // Filtrar elementos según coincidencia parcial en nombre o título
-  const filtrados = elementos.filter(el => {
-    const nombre = (el.attributes?.name || el.attributes?.title || el.name || "").toLowerCase();
-    return nombre.includes(sza);
-  });
-
-  contenedor.innerHTML = generarLista(filtrados);
-}
-
 // --- Función universal para generar la lista de elementos ---
 function generarLista(arrayelementos) {
   if (!arrayelementos || arrayelementos.length === 0) {
+    console.warn("⚠️ generarLista recibió un array vacío o indefinido");
     return `<p style="text-align:center;">No hay elementos para mostrar.</p>`;
   }
 
@@ -27,14 +9,13 @@ function generarLista(arrayelementos) {
 
   for (let i = 0; i < arrayelementos.length; i++) {
     const el = arrayelementos[i];
-
-    // Soporte para datos desde API o desde localStorage
     const id = el.id || `sin-id-${i}`;
     const tipo = el.type || el.tipo || "characters";
 
     // Campos que pueden variar según la fuente
     const nombre = el.attributes?.name || el.attributes?.title || el.name || "Sin nombre";
-    const imagen = el.attributes?.image || el.image || "https://upload.wikimedia.org/wikipedia/en/6/6f/Hogwartscrest.png";
+    const imagen =
+      el.attributes?.image || el.image || "https://upload.wikimedia.org/wikipedia/en/6/6f/Hogwartscrest.png";
 
     listaHTML += `
       <div class="c-lista-objeto obj-${id}" onclick="Detalle('${id}', '${tipo}')">
@@ -46,23 +27,38 @@ function generarLista(arrayelementos) {
   return listaHTML;
 }
 
-// --- Vista principal (Home) ---
-function Home() {
-  const root = document.getElementById("root");
-  root.innerHTML = "";
-
-  // --- Campo de búsqueda ---
+// --- Buscador Universal (usa lo definido en conexion.js) ---
+function crearBuscadorUniversal() {
   const buscador = document.createElement("input");
   buscador.classList.add("c-buscador");
   buscador.type = "text";
-  buscador.placeholder = "Buscar personajes, hechizos o libros...";
-  buscador.addEventListener("input", () => buscadorfuncion(buscador.value));
+  buscador.placeholder = "🔍 Buscar personajes, hechizos o libros...";
+  buscador.addEventListener("input", () => buscadorUniversal(buscador.value, elementos));
+  return buscador;
+}
+
+// --- Vista principal (Home) ---
+async function Home() {
+  const root = document.getElementById("root");
+  root.innerHTML = "<p>Cargando datos...</p>";
+
+  // ⚙️ Si no hay datos, los descargamos
+  if (!elementos || elementos.length === 0) {
+    console.log("📡 Cargando personajes desde la API...");
+    elementos = await conexionLista("characters");
+  }
+
+  console.log("✅ Datos cargados:", elementos.length);
+
+  // --- Campo de búsqueda global ---
+  const buscador = crearBuscadorUniversal();
 
   // --- Botones de filtro (pestañas) ---
   const tipos = [
-    { tipo: "characters", texto: "Personajes" },
-    { tipo: "spells", texto: "Hechizos" },
-    { tipo: "books", texto: "Libros" }
+    { tipo: "characters", texto: "🧙‍♂️ Personajes" },
+    { tipo: "spells", texto: "✨ Hechizos" },
+    { tipo: "books", texto: "📚 Libros" },
+    { tipo: "favoritos", texto: "❤️ Favoritos" }
   ];
 
   const contenedorFiltro = document.createElement("div");
@@ -71,7 +67,15 @@ function Home() {
   tipos.forEach(({ tipo, texto }) => {
     const btn = document.createElement("button");
     btn.textContent = texto;
-    btn.addEventListener("click", () => FiltroConexion(tipo));
+    btn.addEventListener("click", async () => {
+      if (tipo === "favoritos") {
+        Favoritos();
+      } else {
+        root.innerHTML = "<p>Cargando...</p>";
+        elementos = await conexionLista(tipo);
+        renderLista(root);
+      }
+    });
     contenedorFiltro.appendChild(btn);
   });
 
@@ -82,8 +86,22 @@ function Home() {
   contenedorLista.innerHTML = generarLista(elementos);
 
   // --- Ensamblar estructura ---
+  root.innerHTML = "";
   root.appendChild(buscador);
   root.appendChild(contenedorFiltro);
   root.appendChild(contenedorLista);
 }
+
+// --- Render auxiliar ---
+function renderLista(root) {
+  const lista = document.createElement("div");
+  lista.classList.add("c-contenedor-lista");
+  lista.id = "la-lista";
+  lista.innerHTML = generarLista(elementos);
+  root.innerHTML = "";
+  root.appendChild(crearBuscadorUniversal());
+  root.appendChild(lista);
+}
+
+
 

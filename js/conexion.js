@@ -1,24 +1,53 @@
 let elementos = []; // lista general de elementos
 
-
-// Conexión para obtener la lista según tipo
-async function conexionLista(filtrotipo) {
-  let url = "";
-
-  if (filtrotipo == "All" || filtrotipo == "characters") {
-    url = "https://api.potterdb.com/v1/characters";
-  } else if (filtrotipo == "spells") {
-    url = "https://api.potterdb.com/v1/spells";
-  } else if (filtrotipo == "books") {
-    url = "https://api.potterdb.com/v1/books";
-  }
-
-  const res = await fetch(url);
-  const data = await res.json();
-  return data.data;
+// --- Detectar si se ejecuta en WebView (APK Android) ---
+function esWebView() {
+  return /wv/.test(navigator.userAgent.toLowerCase());
 }
 
-// --- 🔍 Buscador universal (para todas las pestañas) ---
+// --- Conexión universal a PotterDB ---
+async function conexionLista(filtrotipo) {
+  let endpoint = "";
+
+  if (filtrotipo === "All" || filtrotipo === "characters") {
+    endpoint = "characters";
+  } else if (filtrotipo === "spells") {
+    endpoint = "spells";
+  } else if (filtrotipo === "books") {
+    endpoint = "books";
+  }
+
+  // 🧩 Parámetros para traer más resultados
+  const limit = 150;
+  const urlReal = `https://api.potterdb.com/v1/${endpoint}?page[size]=${limit}`;
+
+  // 🚀 Si es WebView, usar proxy, pero sin codificar el endpoint
+  const baseURL = esWebView()
+    ? `https://api.allorigins.win/raw?url=${urlReal}`
+    : urlReal;
+
+  console.log("🌐 Solicitando datos desde:", baseURL);
+
+  try {
+    const res = await fetch(baseURL);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
+    const data = await res.json();
+
+    if (!data.data || data.data.length === 0) {
+      console.warn("⚠️ PotterDB devolvió sin datos");
+      return [];
+    }
+
+    console.log("✅ Datos recibidos:", data.data.length);
+    return data.data;
+  } catch (error) {
+    console.error("❌ Error al obtener datos:", error);
+    return [];
+  }
+}
+
+// --- Buscador universal ---
 function buscadorUniversal(texto, lista) {
   const sza = texto.trim().toLowerCase();
   const contenedor = document.getElementById("la-lista");
@@ -28,7 +57,6 @@ function buscadorUniversal(texto, lista) {
     return;
   }
 
-  // Filtrar por coincidencia parcial en nombre o título
   const filtrados = lista.filter(el => {
     const nombre = (el.attributes?.name || el.attributes?.title || el.name || "").toLowerCase();
     return nombre.includes(sza);
@@ -40,7 +68,7 @@ function buscadorUniversal(texto, lista) {
       : `<p style="text-align:center;margin-top:20px;">🪄 No se encontraron resultados.</p>`;
 }
 
-// --- Creador de campo de búsqueda (input dinámico) ---
+// --- Creador de campo de búsqueda ---
 function crearBuscador(lista) {
   const buscador = document.createElement("input");
   buscador.classList.add("c-buscador");
@@ -50,8 +78,7 @@ function crearBuscador(lista) {
   return buscador;
 }
 
-
-// Cargar al iniciar
+// --- Cargar al iniciar ---
 async function General() {
   if (elementos.length === 0) {
     elementos = await conexionLista("characters");
@@ -59,8 +86,9 @@ async function General() {
   Home();
 }
 
-// Filtrar manual (como tu FiltroConexion)
+// --- Filtrar manual (cambio de pestaña) ---
 async function FiltroConexion(filtroelegido) {
   elementos = await conexionLista(filtroelegido);
   document.getElementById("la-lista").innerHTML = generarLista(elementos);
 }
+

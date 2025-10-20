@@ -1,5 +1,8 @@
 let elementos = []; // lista general de elementos
 
+// --- Proxy universal para evitar errores CORS ---
+const proxy = "https://api.allorigins.win/raw?url=";
+
 // Conexión para obtener la lista según tipo
 async function conexionLista(filtrotipo) {
   let url = "";

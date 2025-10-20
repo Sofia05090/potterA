@@ -1,5 +1,7 @@
 var esFavorito = false;
 
+const proxy = "https://api.allorigins.win/raw?url=";
+
 // --- Función para agregar o quitar un personaje, libro o hechizo de favoritos ---
 function toggleFavorito(paramid, paramname, paramtipo = "characters") {
   // Leer favoritos actuales desde localStorage

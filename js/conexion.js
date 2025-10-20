@@ -1,9 +1,7 @@
 let elementos = []; // lista general de elementos
 
-// --- Proxy universal para evitar errores CORS ---
-const proxy = "https://api.allorigins.win/raw?url=";
 
-// --- Conexión con la API PotterDB según tipo ---
+// Conexión para obtener la lista según tipo
 async function conexionLista(filtrotipo) {
   let url = "";
 
@@ -15,15 +13,9 @@ async function conexionLista(filtrotipo) {
     url = "https://api.potterdb.com/v1/books";
   }
 
-  try {
-    const res = await fetch(`${proxy}${url}`);
-    if (!res.ok) throw new Error(`Error HTTP ${res.status}`);
-    const data = await res.json();
-    return data.data || [];
-  } catch (error) {
-    console.error("Error al conectar con PotterDB:", error);
-    return [];
-  }
+  const res = await fetch(url);
+  const data = await res.json();
+  return data.data;
 }
 
 // --- 🔍 Buscador universal (para todas las pestañas) ---
@@ -36,6 +28,7 @@ function buscadorUniversal(texto, lista) {
     return;
   }
 
+  // Filtrar por coincidencia parcial en nombre o título
   const filtrados = lista.filter(el => {
     const nombre = (el.attributes?.name || el.attributes?.title || el.name || "").toLowerCase();
     return nombre.includes(sza);
@@ -57,7 +50,8 @@ function crearBuscador(lista) {
   return buscador;
 }
 
-// --- Cargar al iniciar ---
+
+// Cargar al iniciar
 async function General() {
   if (elementos.length === 0) {
     elementos = await conexionLista("characters");
@@ -65,7 +59,7 @@ async function General() {
   Home();
 }
 
-// --- Cambiar entre personajes / hechizos / libros ---
+// Filtrar manual (como tu FiltroConexion)
 async function FiltroConexion(filtroelegido) {
   elementos = await conexionLista(filtroelegido);
   document.getElementById("la-lista").innerHTML = generarLista(elementos);

@@ -106,7 +106,7 @@ async function Detalle(h, tipo = "characters") {
         <span id="corazon-${h}">${esFavorito ? '❤️' : '🤍'}</span> Favorito
       </button>
       <br><br>
-      <button onClick="Home()">🔙 Volver</button>
+      <button onClick="Home()">Volver</button>
     </section>
     `;
 

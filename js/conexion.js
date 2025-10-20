@@ -17,6 +17,39 @@ async function conexionLista(filtrotipo) {
   return data.data;
 }
 
+// --- 🔍 Buscador universal (para todas las pestañas) ---
+function buscadorUniversal(texto, lista) {
+  const sza = texto.trim().toLowerCase();
+  const contenedor = document.getElementById("la-lista");
+
+  if (!sza || sza.length < 2) {
+    contenedor.innerHTML = generarLista(lista);
+    return;
+  }
+
+  // Filtrar por coincidencia parcial en nombre o título
+  const filtrados = lista.filter(el => {
+    const nombre = (el.attributes?.name || el.attributes?.title || el.name || "").toLowerCase();
+    return nombre.includes(sza);
+  });
+
+  contenedor.innerHTML =
+    filtrados.length > 0
+      ? generarLista(filtrados)
+      : `<p style="text-align:center;margin-top:20px;">🪄 No se encontraron resultados.</p>`;
+}
+
+// --- Creador de campo de búsqueda (input dinámico) ---
+function crearBuscador(lista) {
+  const buscador = document.createElement("input");
+  buscador.classList.add("c-buscador");
+  buscador.type = "text";
+  buscador.placeholder = "🔍 Buscar...";
+  buscador.addEventListener("input", () => buscadorUniversal(buscador.value, lista));
+  return buscador;
+}
+
+
 // Cargar al iniciar
 async function General() {
   if (elementos.length === 0) {

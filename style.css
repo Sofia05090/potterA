@@ -1,4 +1,393 @@
+/* Estilo general */
 body {
-
-    background-color: rgb(250, 250, 250);
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
+  background: radial-gradient(circle at top, #1a1a1a, #000);
+  color: #f4f4f4;
+  overflow-x: hidden;
 }
+
+/* Menú superior */
+.menu {
+  position: sticky;
+  top: 0;
+  background: rgba(30, 0, 60, 0.9);
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 10px;
+  border-bottom: 2px solid gold;
+  box-shadow: 0 2px 10px rgba(255, 215, 0, 0.4);
+  z-index: 1000;
+}
+
+.menu button {
+  background: linear-gradient(145deg, #3e0066, #5a0088);
+  color: #fff;
+  border: 1px solid gold;
+  border-radius: 8px;
+  padding: 8px 14px;
+  font-size: 15px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.menu button:hover {
+  background: linear-gradient(145deg, gold, #d49b00);
+  color: #1a1a1a;
+  transform: scale(1.05);
+}
+
+/* Contenedor principal */
+#root {
+  padding: 20px;
+  min-height: 100vh;
+}
+
+/* Lista general de elementos */
+.c-contenedor-lista {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.c-lista-objeto {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid #444;
+  border-radius: 15px;
+  padding: 10px;
+  text-align: center;
+  transition: all 0.3s ease;
+  box-shadow: 0 0 10px rgba(255, 215, 0, 0.1);
+}
+
+.c-lista-objeto:hover {
+  transform: scale(1.05);
+  border-color: gold;
+  box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
+}
+
+.c-lista-objeto img {
+  width: 80px;
+  height: auto;
+  margin-bottom: 5px;
+  border-radius: 10px;
+}
+
+/* Buscador */
+.c-buscador {
+  display: block;
+  width: 90%;
+  margin: 15px auto;
+  padding: 10px;
+  border-radius: 10px;
+  border: 2px solid gold;
+  background: rgba(0, 0, 0, 0.6);
+  color: #fff;
+  font-size: 16px;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.c-buscador:focus {
+  outline: none;
+  border-color: #ffcc00;
+  box-shadow: 0 0 10px gold;
+}
+
+/* Detalle */
+.c-detalle {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 20px;
+  padding: 20px;
+  text-align: center;
+  box-shadow: 0 0 20px rgba(255, 215, 0, 0.2);
+  max-width: 600px;
+  margin: 30px auto;
+  border: 1px solid #444;
+}
+
+.c-detalle img {
+  width: 150px;
+  height: auto;
+  border-radius: 15px;
+  box-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
+}
+
+.c-detalle p {
+  margin: 8px 0;
+  font-size: 16px;
+}
+
+.c-detalle button {
+  background: linear-gradient(145deg, #3e0066, #5a0088);
+  color: white;
+  border: 1px solid gold;
+  border-radius: 8px;
+  padding: 8px 14px;
+  margin: 10px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.c-detalle button:hover {
+  background: linear-gradient(145deg, gold, #d49b00);
+  color: #000;
+}
+
+/* Página informativa */
+.c-info {
+  text-align: center;
+  padding: 20px;
+  color: #fff;
+  background: radial-gradient(circle at top, #1a1a1a, #000);
+  border-radius: 20px;
+  margin: 20px auto;
+  box-shadow: 0 0 20px #9b59b6;
+  max-width: 800px;
+}
+
+.c-info h1, .c-info h2 {
+  color: #ffcc00;
+  margin-bottom: 10px;
+}
+
+.c-info p, .c-info li {
+  line-height: 1.6;
+  margin: 10px 0;
+  text-align: justify;
+}
+
+.c-info ul {
+  list-style: none;
+  padding: 0;
+}
+
+.c-info li::before {
+  content: "✨ ";
+  color: gold;
+}
+
+.info-img {
+  width: 200px;
+  border-radius: 10px;
+  margin-bottom: 15px;
+  box-shadow: 0 0 10px #ffcc00;
+}
+
+/* Favoritos */
+.c-favoritos {
+  text-align: center;
+  padding: 20px;
+}
+
+.c-favoritos h2 {
+  color: gold;
+}
+
+/* Adaptabilidad */
+@media (max-width: 600px) {
+  .menu {
+    flex-direction: column;
+  }
+  .c-buscador {
+    width: 95%;
+  }
+}
+
+/* Contenedor del filtro */
+.tipos-container {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 20px 0;
+}
+
+/* Botones de filtro */
+.tipos-container button {
+  background: rgba(50, 0, 90, 0.8);
+  border: 1px solid gold;
+  border-radius: 12px;
+  color: #fff;
+  padding: 10px 18px;
+  cursor: pointer;
+  font-size: 15px;
+  transition: all 0.3s ease;
+  box-shadow: 0 0 10px rgba(255, 215, 0, 0.2);
+}
+
+.tipos-container button:hover {
+  background: gold;
+  color: #000;
+  transform: scale(1.05);
+  box-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
+}
+
+/* Efecto activo */
+.tipos-container button.activo {
+  background: linear-gradient(145deg, gold, #d49b00);
+  color: #000;
+  transform: scale(1.05);
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .tipos-container button {
+    width: 90%;
+  }
+}
+
+/* Test de casas de Hogwarts */
+.c-casa {
+  max-width: 800px;
+  margin: 30px auto;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid gold;
+  border-radius: 20px;
+  padding: 25px;
+  box-shadow: 0 0 20px rgba(255, 215, 0, 0.2);
+  text-align: center;
+}
+
+.c-pregunta {
+  margin-bottom: 25px;
+}
+
+.c-pregunta p {
+  font-weight: 600;
+  color: #ffcc00;
+}
+
+.c-opciones {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.c-opciones button {
+  background: rgba(60, 0, 90, 0.8);
+  color: white;
+  border: 1px solid gold;
+  border-radius: 10px;
+  padding: 8px 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.c-opciones button:hover {
+  background: gold;
+  color: #000;
+}
+
+.c-opciones button.activo {
+  background: linear-gradient(145deg, gold, #d49b00);
+  color: #000;
+  transform: scale(1.05);
+}
+
+.btn-descubrir {
+  background: linear-gradient(145deg, gold, #d49b00);
+  border: none;
+  color: #000;
+  font-weight: bold;
+  padding: 12px 20px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.btn-descubrir:hover {
+  background: linear-gradient(145deg, #d49b00, gold);
+  transform: scale(1.05);
+}
+
+.c-resultado img {
+  width: 180px;
+  margin: 15px 0;
+}
+
+.c-resultado p {
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+/* Botones mágicos generales */
+button {
+  background: linear-gradient(145deg, #3e0066, #5a0088);
+  color: #fff;
+  border: 2px solid gold;
+  border-radius: 10px;
+  padding: 10px 18px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+  transition: all 0.3s ease;
+}
+
+button:hover {
+  background: linear-gradient(145deg, gold, #d49b00);
+  color: #000;
+  transform: scale(1.05);
+  box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+}
+
+button:active {
+  transform: scale(0.95);
+}
+
+/* Botón especial: Descubrir mi casa */
+.btn-descubrir {
+  background: linear-gradient(145deg, #ffcc00, #d49b00);
+  color: #000;
+  font-weight: 600;
+  border: 2px solid #ffeb99;
+  margin-top: 10px;
+  animation: pulso 2s infinite ease-in-out;
+}
+
+.btn-descubrir:hover {
+  background: linear-gradient(145deg, #d49b00, gold);
+}
+
+/* ✨ Animación de brillo mágico */
+@keyframes pulso {
+  0% {
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 25px rgba(255, 215, 0, 0.8);
+  }
+  100% {
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.4);
+  }
+}
+
+/* Botón especial: Volver */
+.btn-volver {
+  background: linear-gradient(145deg, #222, #444);
+  border: 2px solid #ffcc00;
+  color: #ffcc00;
+  margin-top: 20px;
+  font-weight: bold;
+  letter-spacing: 0.5px;
+}
+
+.btn-volver:hover {
+  background: gold;
+  color: #000;
+  transform: scale(1.05);
+  box-shadow: 0 0 20px gold;
+}
+
+/* Botón Favorito */
+button span {
+  font-size: 18px;
+}
+
+
